@@ -3,6 +3,7 @@ from jinja2 import Environment, FileSystemLoader, select_autoescape
 from datetime import datetime
 from pandas import read_excel
 from collections import defaultdict
+from argparse import ArgumentParser
 
 
 def word_define(years: int):
@@ -28,47 +29,51 @@ def get_dict_length(dictionary: dict):
     return len(dictionary[atributes[0]])
 
 
-def format_data(drink_number: int, dictionary: dict):
-    data = [dictionary[atribute][drink_number] for atribute in dictionary]
-    dict_data = {
-        "Картинка": data[4],
-        "Категория": data[0],
-        "Название": data[1],
-        "Сорт": data[2],
-        "Цена": data[3]
+def format_attributes(drink_number: int, drinks_info: dict):
+    attributes = [drinks_info[attribute][drink_number] for attribute in drinks_info]
+    formatted_attributes = {
+        "Картинка": attributes[4],
+        "Категория": attributes[0],
+        "Название": attributes[1],
+        "Сорт": attributes[2],
+        "Цена": attributes[3],
+        "Акция": attributes[5]
     }
-    return dict_data
+    return formatted_attributes
 
 
-table_data = read_excel("wine2.xlsx").to_dict()
-drinks_quantity = get_dict_length(table_data)
-drinks_data = defaultdict(list)
+def main():
+    parser = ArgumentParser(description="Парсер аргументов, для запуска сервера")
+    parser.add_argument("--file", type=str, default="wine3.xlsx", help="Файл таблицы, из которого будут взяты данные")
+    args = parser.parse_args()
+    table_data = read_excel(args.file, na_values=["nan"], keep_default_na=False).to_dict()
+    drinks_quantity = get_drinks_quantity(table_data)
+    drinks_categories = defaultdict(list)
+    for drink_number in range(drinks_quantity):
+        current_drink = format_attributes(drink_number, table_data)
+        category = current_drink["Категория"]
+        drinks_categories[category].append(current_drink)
 
-for drink_number in range(drinks_quantity):
-    current_drink = format_data(drink_number, table_data)
-    category = current_drink["Категория"]
-    drinks_data[category].append(current_drink)
+    env = Environment(
+        loader=FileSystemLoader("."),
+        autoescape=select_autoescape(["html", "xml"]),
+    )
 
-raise KeyError
+    template = env.get_template("template.html")
 
-env = Environment(
-    loader=FileSystemLoader("."),
-    autoescape=select_autoescape(["html", "xml"]),
-)
-
-template = env.get_template("template.html")
-
-rendered_page = template.render(
-    years_with_client = datetime.now().year-1923,
-    define_word = word_define(datetime.now().year-1923),
-    drinks_quantity = drinks_quantity,
-    table_data = table_data,
-    format_data = format_data
-)
+    rendered_page = template.render(
+        years_with_client = datetime.now().year-1920,
+        define_word = define_word(datetime.now().year-1920),
+        drinks_categories = drinks_categories
+    )
 
 
-with open('index.html', 'w', encoding="utf8") as file:
-    file.write(rendered_page)
+    with open('index.html', 'w', encoding="utf8") as file:
+        file.write(rendered_page)
 
-server = HTTPServer(('0.0.0.0', 8000), SimpleHTTPRequestHandler)
-server.serve_forever()
+    server = HTTPServer(('0.0.0.0', 8000), SimpleHTTPRequestHandler)
+    server.serve_forever()
+
+
+if __name__ == "__main__":
+    main()
