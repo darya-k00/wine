@@ -43,14 +43,14 @@ def format_attributes(drink_number: int, drinks_info: dict):
 
 
 def main():
-    parser = ArgumentParser(description="Парсер аргументов, для запуска сервера, который обрабатывает данные из указанного файла Exel")
+    parser = ArgumentParser(description="Парсер аргументов, для запуска сервера, который обрабатывает данные из указанного файла Excel")
     parser.add_argument("--file", type=str, default="wine3.xlsx", help="Файл таблицы, из которого будут взяты данные, есои файл не указан, то по умолчанию будет использоваться 'wine3.xlsx'")
     args = parser.parse_args()
-    table_data = read_excel(args.file, na_values=["nan"], keep_default_na=False).to_dict()
-    drinks_quantity = get_drinks_quantity(table_data)
+    excel_data = read_excel(args.file, na_values=["nan"], keep_default_na=False).to_dict()
+    drinks_quantity = get_drinks_quantity(excel_data)
     drinks_categories = defaultdict(list)
     for drink_number in range(drinks_quantity):
-        current_drink = format_attributes(drink_number, table_data)
+        current_drink = format_attributes(drink_number, excel_data)
         category = current_drink["Категория"]
         drinks_categories[category].append(current_drink)
 
