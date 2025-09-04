@@ -6,22 +6,21 @@ from collections import defaultdict
 from argparse import ArgumentParser
 
 
-def word_define(years: int):
-    str_year = str(years)
-    condition = {
-        "0": "лет",
-        "1": "год",
-        "2": "года",
-        "3": "года",
-        "4": "года"
-    }
-    if str_year[-2] == "1":
-        return "лет"
+def word_define(year=1920):
+    let = ' лет'
+    god = ' год'
+    goda = ' года'
+
+    now = datetime.now()
+    number = now.year - year
+    if number % 100 in range(11, 21):
+        return f'{number}{let}'
+    elif number % 10 == 1:
+        return f'{number}{god}'
+    elif number % 10 in range(2, 5):
+        return f"{number}{goda}"
     else:
-        try:
-            return condition[str_year[-1]]
-        except KeyError:
-            return "лет"
+        return f"{number}{let}"
 
 
 def get_dict_length(dictionary: dict):
@@ -46,27 +45,19 @@ def main():
     parser = ArgumentParser(description="Парсер аргументов, для запуска сервера, который обрабатывает данные из указанного файла Excel")
     parser.add_argument("--file", type=str, default="wine3.xlsx", help="Файл таблицы, из которого будут взяты данные, есои файл не указан, то по умолчанию будет использоваться 'wine3.xlsx'")
     args = parser.parse_args()
-    excel_data = read_excel(args.file, na_values=["nan"], keep_default_na=False).to_dict()
-    drinks_quantity = get_drinks_quantity(excel_data)
-    drinks_categories = defaultdict(list)
-    for drink_number in range(drinks_quantity):
-        current_drink = format_attributes(drink_number, excel_data)
-        category = current_drink["Категория"]
-        drinks_categories[category].append(current_drink)
+    excel_data = read_excel(args.file, na_values=["nan"], keep_default_na=False).to_dict(orient='list')
+    wines_by_category = defaultdict(list)
+    
+    for wine in wines:
+        wines_by_category[wine['Категория']].append(wine)
 
-    env = Environment(
-        loader=FileSystemLoader("."),
-        autoescape=select_autoescape(["html", "xml"]),
-    )
-
-    template = env.get_template("template.html")
-
+    env = Environment(loader=FileSystemLoader('templates')) 
+    template = env.get_template('template.html')
+    
     rendered_page = template.render(
-        years_with_client = datetime.now().year-1920,
-        define_word = define_word(datetime.now().year-1920),
-        drinks_categories = drinks_categories
+        year_logo= word_define(),
+        wines_by_category=wines_by_category
     )
-
 
     with open('index.html', 'w', encoding="utf8") as file:
         file.write(rendered_page)
