@@ -23,11 +23,6 @@ def define_word(year=1920):
         return f"{number}{year1}"
 
 
-def get_dict_length(dictionary: dict):
-    atributes = [atribute for atribute in dictionary]
-    return len(dictionary[atributes[0]])
-
-
 def format_attributes(drink_number: int, drinks_info: dict):
     attributes = [drinks_info[attribute][drink_number] for attribute in drinks_info]
     formatted_attributes = {
