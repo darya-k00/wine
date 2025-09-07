@@ -6,7 +6,7 @@ from collections import defaultdict
 from argparse import ArgumentParser
 
 
-def word_define(year=1920):
+def define_word(year=1920):
     let = ' лет'
     god = ' год'
     goda = ' года'
