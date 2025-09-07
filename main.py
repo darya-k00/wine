@@ -7,20 +7,20 @@ from argparse import ArgumentParser
 
 
 def define_word(year=1920):
-    let = ' лет'
-    god = ' год'
-    goda = ' года'
+    year1 = ' лет'
+    year2 = ' год'
+    year3 = ' года'
 
     now = datetime.now()
     number = now.year - year
     if number % 100 in range(11, 21):
-        return f'{number}{let}'
+        return f'{number}{year1}'
     elif number % 10 == 1:
-        return f'{number}{god}'
+        return f'{number}{year2}'
     elif number % 10 in range(2, 5):
-        return f"{number}{goda}"
+        return f"{number}{year3}"
     else:
-        return f"{number}{let}"
+        return f"{number}{year1}"
 
 
 def get_dict_length(dictionary: dict):
