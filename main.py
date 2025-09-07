@@ -50,7 +50,7 @@ def main():
     template = env.get_template('template.html')
     
     rendered_page = template.render(
-        year_logo= word_define(),
+        year_logo= define_word(),
         wines_by_category=wines_by_category
     )
 
