@@ -38,7 +38,7 @@ def format_attributes(drink_number: int, drinks_info: dict):
 
 def main():
     parser = ArgumentParser(description="Сайт с напиткамию.")
-    parser.add_argument("--file", type=str, default="wine3.xlsx", help="Файл таблицы, из которого будут взяты данные, есои файл не указан, то по умолчанию будет использоваться 'wine3.xlsx'")
+    parser.add_argument("--file", type=str, default="wine3.xlsx", help="Файл таблицы, из которого будут взяты данные, есои файл не указан, то по умолчанию будет использоваться 'wine.xlsx'")
     args = parser.parse_args()
     excel_data = read_excel(args.file, na_values=["nan"], keep_default_na=False).to_dict(orient='list')
     wines_by_category = defaultdict(list)
