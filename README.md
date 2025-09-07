@@ -26,7 +26,7 @@ pip install -r requirements.txt
 - Скачайте код
 - Запустите сайт командой
 ```
-python3 main.py --file <фаш файл с данными> runserver
+python3 main.py --file <ваш файл с данными> runserver
 ```
 - Перейдите на сайт по адресу [http://127.0.0.1:8000](http://127.0.0.1:8000).
 
