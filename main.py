@@ -7,20 +7,20 @@ from argparse import ArgumentParser
 
 
 def define_word(year=1920):
-    year1 = ' лет'
-    year2 = ' год'
-    year3 = ' года'
+    age = ' лет'
+    year = ' год'
+    years = ' года'
 
     now = datetime.now()
     number = now.year - year
     if number % 100 in range(11, 21):
-        return f'{number}{year1}'
+        return f'{number}{age}'
     elif number % 10 == 1:
-        return f'{number}{year2}'
+        return f'{number}{year}'
     elif number % 10 in range(2, 5):
-        return f"{number}{year3}"
+        return f"{number}{years}"
     else:
-        return f"{number}{year1}"
+        return f"{number}{age}"
 
 
 def format_attributes(drink_number: int, drinks_info: dict):
