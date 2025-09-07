@@ -23,19 +23,6 @@ def define_word(year=1920):
         return f"{number}{age}"
 
 
-def format_attributes(drink_number: int, drinks_info: dict):
-    attributes = [drinks_info[attribute][drink_number] for attribute in drinks_info]
-    formatted_attributes = {
-        "Картинка": attributes[4],
-        "Категория": attributes[0],
-        "Название": attributes[1],
-        "Сорт": attributes[2],
-        "Цена": attributes[3],
-        "Акция": attributes[5]
-    }
-    return formatted_attributes
-
-
 def main():
     parser = ArgumentParser(description="Сайт с напиткамию.")
     parser.add_argument("--file", type=str, default="wine3.xlsx", help="Файл таблицы, из которого будут взяты данные, есои файл не указан, то по умолчанию будет использоваться 'wine.xlsx'")
